@@ -12,22 +12,22 @@ public class Recipe {
     private Long id;
 
     @Column(unique = true)
-    private String name;
+    private String recipeName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recipeCategory_id")
     private RecipeCategory recipeCategory;
 
-    public Recipe(String name) {
-        this.name = name;
+    public Recipe(String recipeName) {
+        this.recipeName = recipeName;
     }
 
     //noop constructor
     public Recipe() {
     }
 
-    public String getName() {
-        return name;
+    public String getRecipeName() {
+        return recipeName;
     }
 
     public Long getId() {

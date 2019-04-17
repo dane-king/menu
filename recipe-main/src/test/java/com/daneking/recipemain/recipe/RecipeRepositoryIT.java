@@ -5,7 +5,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.thymeleaf.util.StringUtils;
@@ -19,14 +18,12 @@ import static org.junit.Assert.fail;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-@Sql("classpath:data.sql")
+@Sql("classpath:recipe/data.sql")
 public class RecipeRepositoryIT {
-    //for some reason using the test entity manager and flush does not do the ame thing
-//    @Autowired
-//    private TestEntityManager entityManager;
-
     @Autowired
     private RecipeRepository recipeRepository;
+    //defined in data.sql
+    public static final String RECIPE_NAME = "Recipe Number One";
 
     @Test
     public void saveRecipeReturnRecipeWithId() {
@@ -37,23 +34,19 @@ public class RecipeRepositoryIT {
 
     @Test
     public void findByNameReturnsRecipe() {
-        String recipeName = "Recipe Name One";
-        Recipe recipe = createRecipe(recipeName);
-        recipeRepository.saveAndFlush(recipe);
+        Optional<Recipe> _recipe = recipeRepository.findOneByRecipeName(RECIPE_NAME);
 
-        Optional<Recipe> _recipe = recipeRepository.findOneByName(recipeName);
-
-        assertThat(_recipe.get(), equalTo(recipe));
+        assertThat(_recipe.get().getRecipeName(), equalTo(RECIPE_NAME));
     }
 
     @Test(expected = DataIntegrityViolationException.class)
     public void cannotCreateRecipesOfSameName() {
-        String recipeName = "Recipe Name";
-
-        recipeRepository.saveAndFlush(createRecipe(recipeName));
-        recipeRepository.saveAndFlush(createRecipe(recipeName));
+        recipeRepository.saveAndFlush(createRecipe(RECIPE_NAME));
         fail();
     }
+
+    //Test creating with category
+    //Create tests for category, ie findall recipes by category
 
     private Recipe createRecipe(String recipeName) {
         if (StringUtils.isEmpty(recipeName)) {
