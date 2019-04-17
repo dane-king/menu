@@ -4,13 +4,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Propagation;
 import org.thymeleaf.util.StringUtils;
 
-import javax.transaction.Transactional;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -20,6 +19,7 @@ import static org.junit.Assert.fail;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
+@Sql("classpath:data.sql")
 public class RecipeRepositoryIT {
     //for some reason using the test entity manager and flush does not do the ame thing
 //    @Autowired
@@ -30,6 +30,7 @@ public class RecipeRepositoryIT {
 
     @Test
     public void saveRecipeReturnRecipeWithId() {
+
         Recipe _recipe = recipeRepository.save(createRecipe(null));
         assertThat(_recipe.getId(), notNullValue());
     }

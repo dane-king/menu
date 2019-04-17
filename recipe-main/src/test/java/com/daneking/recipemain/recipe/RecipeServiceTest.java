@@ -1,5 +1,6 @@
 package com.daneking.recipemain.recipe;
 
+import com.daneking.recipemain.recipe.RecipeService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

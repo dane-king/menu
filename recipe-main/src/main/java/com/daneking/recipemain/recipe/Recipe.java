@@ -1,5 +1,7 @@
 package com.daneking.recipemain.recipe;
 
+import com.daneking.recipemain.recipe.category.RecipeCategory;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -11,6 +13,10 @@ public class Recipe {
 
     @Column(unique = true)
     private String name;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recipeCategory_id")
+    private RecipeCategory recipeCategory;
 
     public Recipe(String name) {
         this.name = name;
@@ -28,6 +34,13 @@ public class Recipe {
         return this.id;
     }
 
+    public RecipeCategory getRecipeCategory() {
+        return recipeCategory;
+    }
+
+    public void setRecipeCategory(RecipeCategory recipeCategory) {
+        this.recipeCategory=recipeCategory;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -40,4 +53,6 @@ public class Recipe {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+
 }
