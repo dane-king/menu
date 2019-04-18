@@ -1,14 +1,18 @@
 package com.daneking.recipemain.recipe;
 
-import com.daneking.recipemain.recipe.RecipeService;
-import org.junit.Before;
+import com.daneking.recipemain.recipe.category.RecipeCategory;
+import com.daneking.recipemain.recipe.ingredient.Ingredient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.mockito.Mockito.*;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RecipeServiceTest {
@@ -19,14 +23,18 @@ public class RecipeServiceTest {
     @Mock
     private RecipeRepository recipeRepository;
 
-    @Before
-    public void setUp() {
-
-    }
-
     @Test
     public void addRecipeCallsSaveOnRepository() {
-        Recipe recipe = new Recipe();
+        List<Ingredient> ingredientList= Arrays.asList(
+                new Ingredient("Carrots"),
+                new Ingredient("Honey"));
+
+        Recipe recipe = new RecipeFactory(null)
+                .with(bld->{
+                        bld.category=RecipeCategory.MAIN;
+                        bld.ingredientList=ingredientList;
+                })
+                .create();
         recipeService.addRecipe(recipe);
         verify(recipeRepository).save(eq(recipe));
 
